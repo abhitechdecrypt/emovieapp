@@ -13,6 +13,7 @@ const LoginPage = () => {
    const [contact, setContact] = useState("");
    const [username, setUsername] = useState("");
    const { login, loading, user } = useAuth();
+   
 
    useEffect(() => {
       // Retrieve user data from cookies on component mount
@@ -36,19 +37,14 @@ const LoginPage = () => {
 
       try {
          await login(loginData);
+         navigate('/');
       } catch (error) {
          console.error("Login failed:", error);
       }
    };
 
-   const handleLogout = () => {
-      Cookies.remove("token");
-      setUsername("");
-      // Additional logout logic if needed
-   };
-
    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex items-center justify-center min-h-screen bg-gray-300">
          <div className="w-full max-w-sm bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
             <form onSubmit={handleLogin}>

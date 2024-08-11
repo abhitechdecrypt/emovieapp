@@ -1,0 +1,44 @@
+export const ADMIN_CONSTANT = [
+   {
+      href: "/add-movies",
+      text: "Add Movies",
+   },
+   {
+      href: "/edit-movies",
+      text: "Edit Movies",
+   },
+   {
+      href: "/delete-movies",
+      text: "Delete Movies",
+   },
+   {
+      href: "block-cinema",
+      text: "Block/Unblock Movies",
+   },
+];
+
+export const USER_CONSTANT = [
+   {
+      href: "/book-movies",
+      text: "Book Movies",
+   },
+   {
+      href: "/booking-history",
+      text: "Booking History",
+   },
+   {
+      href: "/cancel-booking",
+      text: "Cancel Booking",
+   },
+];
+
+export const excludedPaths = [
+   "/user-login",
+   "/user-register",
+   "/about",
+   "/movie-details",
+   "/user-dashboard",
+   "/not-authorized",
+   "/add-movies",
+   "/block-cinema"
+];

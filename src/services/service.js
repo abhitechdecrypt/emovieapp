@@ -14,23 +14,31 @@ export const login = async (data) => {
     }
   };
 
-
-  export const register = async (data) => {
+  export const getCinemaList = async () => {
     try {
-      const response = await axiosInstance.post("http://localhost:8083/api/v1/movies/register",data);
-      return response.data;
+      const response = await axiosInstance.get(api.SUB_URL_MOVIES+api.LIST_CINEMA);
+      return response?.data;
     } catch (error) {
-      console.error('Register error:', error.response?.data || error.message);
+      console.error('Get cinema list error:', error.response?.data || error.message);
       throw error; // Re-throw the error to be handled by the caller
     }
-  };
+  }
 
-  export const getMovies = async () => {
+  export const addMovies = async (data) => {
     try {
-      const response = await axiosInstance.get("http://localhost:8083/api/v1/movies");
+      const response = await axiosInstance.post(api.SUB_URL_MOVIES+api.ADD_MOVIES,data);
       return response.data;
     } catch (error) {
-      console.error('Get movies error:', error.response?.data || error.message);
+      console.error('Add movies error:', error.response?.data || error.message);
       throw error; // Re-throw the error to be handled by the caller
     }
-  };
+  }
+  export const blockUnblockCinema = async (id) => {
+    try {
+      const response = await axiosInstance.put(api.SUB_URL_MOVIES+api.BLOCK_UNBLOCK_CINEMA+"/"+id);
+      return response.data;
+    } catch (error) {
+      console.error('Add movies error:', error.response?.data || error.message);
+      throw error; // Re-throw the error to be handled by the caller
+    }
+  }

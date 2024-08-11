@@ -5,6 +5,7 @@ import { useAuth } from "../Login/AuthProvider";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { FaUserCircle } from "react-icons/fa";
+import * as user_link from "../CONSTANT";
 
 const Navbar = () => {
    const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +14,7 @@ const Navbar = () => {
    const [password, setPassword] = useState("");
    const [username, setUsername] = useState("");
    const { login, loading, user } = useAuth();
+   const [userRole, setUserRole] = useState("");
 
    useEffect(() => {
       // Retrieve user data from cookies on component mount
@@ -20,6 +22,8 @@ const Navbar = () => {
       if (token) {
          try {
             const decoded = jwtDecode(token);
+            console.log("User Data:: ", decoded);
+            setUserRole(decoded?.userData?.userRole || "");
             setUsername(decoded.userData?.username || "");
          } catch (e) {
             console.error("Failed to decode token:", e);
@@ -35,25 +39,35 @@ const Navbar = () => {
       setDialogOpen(!dialogOpen);
    };
 
-   const handleLogin = async (event) => {
-      event.preventDefault();
-      const loginData = {
-         email: contact,
-         password,
-      };
+   // const handleLogin = async (event) => {
+   //    event.preventDefault();
+   //    const loginData = {
+   //       email: contact,
+   //       password,
+   //    };
 
-      try {
-         await login(loginData);
-         setDialogOpen(false);
-      } catch (error) {
-         console.error("Login failed:", error);
-      }
-   };
+   //    try {
+   //       await login(loginData);
+   //       setDialogOpen(false);
+   //    } catch (error) {
+   //       console.error("Login failed:", error);
+   //    }
+   // };
 
    const handleLogout = () => {
       Cookies.remove("token");
       setUsername("");
+      setUserRole("");
       // Additional logout logic if needed
+   };
+
+   const renderMenuItems = () => {
+      const menuItems = userRole === "ADMIN" ? user_link.ADMIN_CONSTANT : user_link.USER_CONSTANT;
+      return menuItems.map((item) => (
+         <NavLink key={item.href} to={item.href} className="block px-4 py-2 hover:bg-gray-700">
+            {item.text}
+         </NavLink>
+      ));
    };
 
    return (
@@ -81,67 +95,81 @@ const Navbar = () => {
                </button>
             </div>
          </div>
+
+         {/* Desktop Menu */}
          <div className="hidden md:flex items-center space-x-4">
-               <Link to="/" className="text-white text-lg py-2" onClick={toggleMenu}>
-                     Home
-                  </Link>
-                  <Link
-                     to="/movie-details"
-                     className="text-white text-lg py-2"
-                     onClick={toggleMenu}
-                  >
-                     About
-                  </Link>
-                  <Link to="/contact" className="text-white text-lg py-2" onClick={toggleMenu}>
-                     Contact
-                  </Link>
-                  <Link to="/movies" className="text-white text-lg py-2" onClick={toggleMenu}>
-                     Movies
-                  </Link>
-            </div>
+            <Link to="/" className="text-white text-lg py-2" onClick={toggleMenu}>
+               Home
+            </Link>
+            <Link to="/movies" className="text-white text-lg py-2" onClick={toggleMenu}>
+               Movies
+            </Link>
+         </div>
 
          {/* User Menu */}
          {username ? (
             <div className="relative group z-50">
-               <button className="text-white flex items-center space-x-2 p-2 hover:bg-gray-700 rounded-full">
+               <button className="text-white flex items-center ml-3 space-x-2 p-2 hover:bg-gray-700 rounded-full">
                   <FaUserCircle />
                   <span>{username}</span>
                </button>
                <div className="absolute right-0 mt-0 bg-gray-800 text-white rounded-md shadow-lg w-48 hidden group-hover:block">
-                  <NavLink to="/profile" className="block px-4 py-2 hover:bg-gray-700">
+                  <NavLink to="/user-dashboard" className="block px-4 py-2 hover:bg-gray-700">
                      Profile
                   </NavLink>
+                  {renderMenuItems()}
                   <button
                      className="block w-full px-4 py-2 text-left hover:bg-gray-700"
                      onClick={handleLogout}
                   >
                      Logout
                   </button>
+                  {/* {userRole === "ADMIN" ? (
+                     <>
+                        <NavLink
+                           to="/add-movies"
+                           className="block w-full px-4 py-2 text-left hover:bg-gray-700"
+                        >
+                           Add Movies
+                        </NavLink>
+                        <NavLink
+                           to="/block-movies"
+                           className="block w-full px-4 py-2 text-left hover:bg-gray-700"
+                        >
+                           Block/Unblock Cinema
+                        </NavLink>
+                     </>
+                  ) : (
+                     <>
+                        <NavLink
+                           to="/booking-history"
+                           className="block w-full px-4 py-2 text-left hover:bg-gray-700"
+                        >
+                           Booking History
+                        </NavLink>
+                        <NavLink
+                           to="/book-movies"
+                           className="block w-full px-4 py-2 text-left hover:bg-gray-700"
+                        >
+                           Book Movies
+                        </NavLink>
+                     </>
+                  )} */}
                </div>
             </div>
          ) : (
-            <div className="hidden md:flex items-center space-x-4">
-               <Link to="/" className="text-white text-lg py-2" onClick={toggleMenu}>
-                     Home
-                  </Link>
-                  <Link
-                     to="/movie-details"
-                     className="text-white text-lg py-2"
-                     onClick={toggleMenu}
-                  >
-                     About
-                  </Link>
-                  <Link to="/contact" className="text-white text-lg py-2" onClick={toggleMenu}>
-                     Contact
-                  </Link>
-                  <Link to="/movies" className="text-white text-lg py-2" onClick={toggleMenu}>
-                     Movies
-                  </Link>
-               <Link to="/user-login" 
-                  className="bg-blue-500 text-white px-4 py-2  rounded-md hover:bg-blue-600"
-                  onClick={toggleDialog}
+            <div className="hidden ml-2 md:flex items-center space-x-4">
+               <Link
+                  to="/user-login"
+                  className="bg-lime-700 text-white px-4 py-2 rounded-full hover:bg-lime-900 transition-all"
                >
                   Login
+               </Link>
+               <Link
+                  to="/user-register"
+                  className="bg-cyan-400 text-white px-4 py-2 rounded-full hover:bg-cyan-900 transition-all"
+               >
+                  Sign Up
                </Link>
             </div>
          )}
@@ -161,23 +189,13 @@ const Navbar = () => {
                   <Link to="/" className="text-white text-2xl py-2" onClick={toggleMenu}>
                      Home
                   </Link>
-                  <Link
-                     to="/movie-details"
-                     className="text-white text-2xl py-2"
-                     onClick={toggleMenu}
-                  >
-                     About
-                  </Link>
-                  <Link to="/contact" className="text-white text-2xl py-2" onClick={toggleMenu}>
-                     Contact
-                  </Link>
                   <Link to="/movies" className="text-white text-2xl py-2" onClick={toggleMenu}>
                      Movies
                   </Link>
                   {username ? (
                      <>
                         <NavLink
-                           to="/profile"
+                           to="/user-dashboard"
                            className="text-white text-2xl py-2"
                            onClick={toggleMenu}
                         >
@@ -191,13 +209,22 @@ const Navbar = () => {
                         </button>
                      </>
                   ) : (
-                     <NavLink
-                        to="/user-login"
-                        className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-600"
-                        onClick={toggleDialog}
-                     >
-                        Login
-                     </NavLink>
+                     <div className=" flex flex-col items-center">
+                        <Link
+                           to="/user-login"
+                           className="bg-lime-700 text-white px-4 py-2 rounded-full hover:bg-lime-900 transition-all"
+                           onClick={toggleMenu}
+                        >
+                           Login
+                        </Link>
+                        <Link
+                           to="/user-register"
+                           className="bg-cyan-400 mt-3 text-white px-4 py-2 rounded-full hover:bg-cyan-900 transition-all"
+                           onClick={toggleMenu}
+                        >
+                           Sign Up
+                        </Link>
+                     </div>
                   )}
                </div>
             </div>
