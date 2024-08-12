@@ -3,9 +3,13 @@ export const ADMIN_CONSTANT = [
       href: "/add-movies",
       text: "Add Movies",
    },
+   // {
+   //    href: "/edit-movies",
+   //    text: "Edit Movies",
+   // },
    {
-      href: "/edit-movies",
-      text: "Edit Movies",
+      href: "/add-cinema",
+      text: "Add Cinema",
    },
    {
       href: "/delete-movies",
@@ -40,5 +44,8 @@ export const excludedPaths = [
    "/user-dashboard",
    "/not-authorized",
    "/add-movies",
-   "/block-cinema"
+   "/block-cinema",
+   "/add-cinema",
+   "/book-movies",
+   "/booking-history"
 ];

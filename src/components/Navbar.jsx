@@ -6,12 +6,12 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { FaUserCircle } from "react-icons/fa";
 import * as user_link from "../CONSTANT";
+import Swal from "sweetalert2";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 const Navbar = () => {
    const [isOpen, setIsOpen] = useState(false);
    const [dialogOpen, setDialogOpen] = useState(false);
-   const [contact, setContact] = useState("");
-   const [password, setPassword] = useState("");
    const [username, setUsername] = useState("");
    const { login, loading, user } = useAuth();
    const [userRole, setUserRole] = useState("");
@@ -22,7 +22,28 @@ const Navbar = () => {
       if (token) {
          try {
             const decoded = jwtDecode(token);
-            console.log("User Data:: ", decoded);
+            const expInMillis = decoded.exp * 1000;
+
+            // Get current time in milliseconds
+            const nowInMillis = Date.now();
+            if (nowInMillis > expInMillis) {
+               Swal.fire({
+                  title: "Session Expired!",
+                  text: "Session Expired, Please Login to use the new session",
+                  icon: "warning",
+                  confirmButtonText: "Login",
+                  // Use preConfirm to handle actions before closing the alert
+                  preConfirm: () => {
+                     // Clear the cookies and perform logout actions
+                     Cookies.remove("token"); // Remove the token cookie
+                     setUsername(""); // Clear the username state
+                     setUserRole(""); // Clear the user role state
+
+                     // Optionally, you can redirect the user to the login page
+                     window.location.href = "/user-login";
+                  },
+               });
+            }
             setUserRole(decoded?.userData?.userRole || "");
             setUsername(decoded.userData?.username || "");
          } catch (e) {
@@ -34,26 +55,6 @@ const Navbar = () => {
    const toggleMenu = () => {
       setIsOpen(!isOpen);
    };
-
-   const toggleDialog = () => {
-      setDialogOpen(!dialogOpen);
-   };
-
-   // const handleLogin = async (event) => {
-   //    event.preventDefault();
-   //    const loginData = {
-   //       email: contact,
-   //       password,
-   //    };
-
-   //    try {
-   //       await login(loginData);
-   //       setDialogOpen(false);
-   //    } catch (error) {
-   //       console.error("Login failed:", error);
-   //    }
-   // };
-
    const handleLogout = () => {
       Cookies.remove("token");
       setUsername("");
@@ -112,6 +113,7 @@ const Navbar = () => {
                <button className="text-white flex items-center ml-3 space-x-2 p-2 hover:bg-gray-700 rounded-full">
                   <FaUserCircle />
                   <span>{username}</span>
+                  <MdOutlineKeyboardArrowDown className="text-2xl hover:skew-y-0"/>
                </button>
                <div className="absolute right-0 mt-0 bg-gray-800 text-white rounded-md shadow-lg w-48 hidden group-hover:block">
                   <NavLink to="/user-dashboard" className="block px-4 py-2 hover:bg-gray-700">
@@ -124,37 +126,6 @@ const Navbar = () => {
                   >
                      Logout
                   </button>
-                  {/* {userRole === "ADMIN" ? (
-                     <>
-                        <NavLink
-                           to="/add-movies"
-                           className="block w-full px-4 py-2 text-left hover:bg-gray-700"
-                        >
-                           Add Movies
-                        </NavLink>
-                        <NavLink
-                           to="/block-movies"
-                           className="block w-full px-4 py-2 text-left hover:bg-gray-700"
-                        >
-                           Block/Unblock Cinema
-                        </NavLink>
-                     </>
-                  ) : (
-                     <>
-                        <NavLink
-                           to="/booking-history"
-                           className="block w-full px-4 py-2 text-left hover:bg-gray-700"
-                        >
-                           Booking History
-                        </NavLink>
-                        <NavLink
-                           to="/book-movies"
-                           className="block w-full px-4 py-2 text-left hover:bg-gray-700"
-                        >
-                           Book Movies
-                        </NavLink>
-                     </>
-                  )} */}
                </div>
             </div>
          ) : (
@@ -209,7 +180,7 @@ const Navbar = () => {
                         </button>
                      </>
                   ) : (
-                     <div className=" flex flex-col items-center">
+                     <div className="flex flex-col items-center">
                         <Link
                            to="/user-login"
                            className="bg-lime-700 text-white px-4 py-2 rounded-full hover:bg-lime-900 transition-all"

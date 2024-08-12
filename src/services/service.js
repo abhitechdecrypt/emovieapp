@@ -1,22 +1,37 @@
 import { axiosInstance } from "./AxiosInstance";
 import * as api from'./API_CONSTANT';
+import { toast } from "react-toastify";
 
 
 export const login = async (data) => {
     try {
       const response = await axiosInstance.post(api.SUB_URL_USERS+api.USER_LOGIN,data);      
-      console.log(response);
-      
       return response.data;
     } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
-      throw error; // Re-throw the error to be handled by the caller
+      throw error; 
+    }
+  };
+export const registerUser = async (data) => {
+    try {
+      const response = await axiosInstance.post(api.SUB_URL_USERS+api.USER_REGISTER,data);      
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   };
 
   export const getCinemaList = async () => {
     try {
       const response = await axiosInstance.get(api.SUB_URL_MOVIES+api.LIST_CINEMA);
+      return response?.data;
+    } catch (error) {
+      console.error('Get cinema list error:', error.response?.data || error.message);
+      throw error; // Re-throw the error to be handled by the caller
+    }
+  }
+  export const createNewCinema = async (data) => {
+    try {
+      const response = await axiosInstance.post(api.SUB_URL_MOVIES+api.LIST_CINEMA,data);
       return response?.data;
     } catch (error) {
       console.error('Get cinema list error:', error.response?.data || error.message);
@@ -31,6 +46,57 @@ export const login = async (data) => {
     } catch (error) {
       console.error('Add movies error:', error.response?.data || error.message);
       throw error; // Re-throw the error to be handled by the caller
+    }
+  }
+
+  export const getMoviesData = async () => {
+    try {
+      const response = await axiosInstance.get(api.SUB_URL_MOVIES+api.ADD_MOVIES);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data || error.message);
+      console.error('Add movies error:', error.response?.data || error.message);
+      throw error;
+    }
+  }
+  export const getMoviesById = async (id) => {
+    try {
+      const response = await axiosInstance.get(api.SUB_URL_MOVIES+api.ADD_MOVIES+"/"+id);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data || error.message);
+      console.error('Add movies error:', error.response?.data || error.message);
+      throw error;
+    }
+  }
+  export const bookMovies = async (data) => {
+    try {
+      const response = await axiosInstance.post(api.SUB_URL_MOVIES+api.BOOK_MOVIES,data);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data || error.message);
+      console.error('Add movies error:', error.response?.data || error.message);
+      throw error;
+    }
+  }
+  export const cancelBooking = async (data) => {
+    try {
+      const response = await axiosInstance.put(api.SUB_URL_MOVIES+api.BOOK_MOVIES+"/{bookingId}?bookingId="+data);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data || error.message);
+      console.error('Add movies error:', error.response?.data || error.message);
+      throw error;
+    }
+  }
+  export const findBookingById = async (id) => {
+    try {
+      const response = await axiosInstance.get(api.SUB_URL_MOVIES+api.BOOK_MOVIES+"?email="+id);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response?.data || error.message);
+      console.error('Add movies error:', error.response?.data || error.message);
+      throw error;
     }
   }
   export const blockUnblockCinema = async (id) => {

@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
       Cookies.set('token', userData.token,{ expires: 7 });
       setUser(userData);
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('Login failed:>', error);
     } finally {
       setLoading(false);
     }
