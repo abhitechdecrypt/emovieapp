@@ -7,6 +7,7 @@ import BookCard from "../components/BookCard";
 import axios from "axios";
 import { BASE_URL, SUB_URL_MOVIES } from "../services/API_CONSTANT";
 import { useNavigate } from "react-router-dom";
+import SkeletonLoader from "../components/SkeletonLoader";
 
 // Hardcoded data for featured movies and other movies
 const featuredMovies = [
@@ -123,17 +124,25 @@ const HomePage = () => {
          .then((res) => {
             console.log("Data : MOVIES:", res?.data);
             setCurrentMoviesData(res?.data); // Assuming res.data.data is the array of movies
-            setLoading(false); // Set loading to false after data is fetched
+            // setLoading(false); 
          })
          .catch((err) => {
             console.error("Error fetching movies: ", err);
-            setLoading(false); // Also set loading to false if there's an error
+            // setLoading(false);
          });
    }, []);
 
    const handleBooking = (id) => {
       navigate(`/book-movies/${id}`);
    };
+
+   useEffect(() => {
+      // Simulate a data fetch
+      setTimeout(() => {
+         // Fetch your data here and set it to currentMoviesData
+         setLoading(false);
+      }, 3000); // Example delay
+   }, []);
 
    return (
       <div className="p-6 bg-gray-100 min-h-screen">
@@ -165,7 +174,7 @@ const HomePage = () => {
                   {featuredMovies.map((movie, index) => (
                      <div
                         key={movie.id}
-                        className="flex-none w-64 bg-white rounded-lg transition-transform duration-300 hover:w-80 cursor-pointer"
+                        className="flex-none w-64 bg-white rounded-lg transition-transform duration-700 hover:w-80 cursor-pointer"
                         onClick={() => handleCardClick(index)}
                      >
                         <BookCard movie={movie} />
@@ -176,35 +185,56 @@ const HomePage = () => {
          </section>
 
          {/* Movies Grid */}
-         <section>
-            <h2 className="text-3xl font-bold mb-4 text-gray-800">Currently in Cinemas</h2>
+         {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-               {currentMoviesData.map((movie) => (
-                  <div
-                     key={movie.id}
-                     className="relative bg-white p-4 rounded-lg shadow-lg hover:bg-slate-200 transition-all duration-700 hover:scale-95 cursor-pointer group"
-                  >
-                     <img
-                        src={movie.image}
-                        alt={movie.title}
-                        className="w-full h-64 object-cover rounded-md"
-                     />
-                     <h2 className="text-xl font-semibold mt-4">{movie.title}</h2>
-                     <p className="text-gray-600 mt-2">{movie.director}</p>
-                     <p className="text-gray-600 mt-2">Genre: {movie.genre}</p>
-                     <p className="text-gray-600 mt-2">Rating: {movie.ratings}</p>
-                     <p className="text-gray-600 mt-2">Length: {movie.length} mins</p>
-                     <p className="text-gray-600 mt-2">Release Date: {movie.releasedDate}</p>
-                     <button
-                        className="absolute bottom-2 right-2 bg-slate-400 text-white p-2 rounded-full shadow-2xl shadow-slate-800 opacity-0 group-hover:opacity-100 transition-opacity duration-700 hover:bg-zinc-700"
-                        onClick={() => handleBooking(movie.id)}
-                     >
-                        Watch Now
-                     </button>
-                  </div>
-               ))}
+
+               <SkeletonLoader />
+               <SkeletonLoader />
+               <SkeletonLoader />
             </div>
-         </section>
+         ) : (
+            <section id="movie-section">
+               <h2 className="text-3xl font-bold mb-4 text-gray-800">Currently in Cinemas</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {currentMoviesData.map((movie) => (
+                     <div
+                        key={movie.id}
+                        className="relative bg-white p-4 rounded-lg shadow-lg hover:bg-slate-200 transition-all duration-700 hover:scale-95 cursor-pointer group"
+                     >
+                        <img
+                           src={movie.image}
+                           alt={movie.title}
+                           className="w-full h-64 object-cover rounded-md"
+                        />
+                        <h2 className="text-xl font-semibold mt-4">{movie.title}</h2>
+                        <p className="text-gray-600 mt-2">{movie.director}</p>
+                        <p className="text-gray-600 mt-2">Genre: {movie.genre}</p>
+                        <p className="text-gray-600 mt-2">Rating: {movie.ratings}</p>
+                        <p className="text-gray-600 mt-2">Length: {movie.length} mins</p>
+                        <p className="text-gray-600 mt-2">Release Date: {movie.releasedDate}</p>
+
+                        {/* Cinema List Dropdown */}
+                        <div className="absolute top-0 right-0 w-64 bg-black bg-opacity-70 text-white flex flex-col p-4 transform translate-y-full opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-10 rounded-tr-lg">
+                           <h3 className="text-lg font-semibold mb-2">Playing at:</h3>
+                           <ul className="list-disc pl-5">
+                              {movie.cinemas.map((cinema) => (
+                                 <li key={cinema.id}>{cinema.name}</li>
+                              ))}
+                           </ul>
+                        </div>
+
+                        {/* Watch Now Button */}
+                        <button
+                           className="absolute bottom-2 right-2 bg-slate-400 text-white p-2 rounded-full shadow-2xl shadow-slate-800 opacity-0 group-hover:opacity-100 transition-opacity duration-700 hover:bg-zinc-700"
+                           onClick={() => handleBooking(movie.id)}
+                        >
+                           Watch Now
+                        </button>
+                     </div>
+                  ))}
+               </div>
+            </section>
+         )}
       </div>
    );
 };

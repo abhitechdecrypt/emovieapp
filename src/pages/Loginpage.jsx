@@ -1,19 +1,22 @@
 // src/pages/LoginPage.js
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../Login/AuthProvider";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const navigate = useNavigate();
-
+   const location = useLocation();
    const [contact, setContact] = useState("");
    const [username, setUsername] = useState("");
    const { login, loading, user } = useAuth();
    
+   // Store the previous location in state
+   const from = location.state?.from?.pathname || "/";
 
    useEffect(() => {
       // Retrieve user data from cookies on component mount
@@ -39,6 +42,7 @@ const LoginPage = () => {
          await login(loginData);
          navigate('/');
       } catch (error) {
+         toast.error(error);
          console.error("Login failed:", error);
       }
    };

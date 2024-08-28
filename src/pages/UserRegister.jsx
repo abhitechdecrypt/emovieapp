@@ -3,8 +3,10 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { registerUser } from "../services/service";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+   const navigate = useNavigate();
    const initialValues = {
       userName: "",
       password: "",
@@ -28,14 +30,16 @@ const RegisterPage = () => {
 
    const handleSubmit = async (values) => {
       console.log("Form Data Submitted:", values);
-         try {
-            await registerUser(values);
-            toast.success("User Registered successfully");
-         } catch (error) {
-            console.log("Registered :: "+error);
-            toast.success("Failed Register");
-         }
-      
+      try {
+         await registerUser(values);
+         toast.success("User Registered successfully", {
+            onClose: () => {
+               navigate("/user-login");
+            },
+         });
+      } catch (error) {
+         toast.error(error?.message);
+      }
    };
 
    return (

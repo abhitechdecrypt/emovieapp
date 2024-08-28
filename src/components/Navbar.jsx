@@ -59,6 +59,7 @@ const Navbar = () => {
       Cookies.remove("token");
       setUsername("");
       setUserRole("");
+      window.location.reload();
       // Additional logout logic if needed
    };
 
@@ -71,6 +72,13 @@ const Navbar = () => {
       ));
    };
 
+
+   const scrollToMovieSection = () => {
+      const movieSectionRef = document.getElementById("movie-section");
+      if (movieSectionRef) {
+         movieSectionRef.scrollIntoView({ behavior: 'smooth' });
+      }
+   };
    return (
       <nav className="bg-gray-800 p-3 flex items-center justify-between">
          {/* Logo and Desktop Links */}
@@ -85,7 +93,7 @@ const Navbar = () => {
             <div className="relative max-w-xs w-full">
                <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search movies ... "
                   className="bg-slate-400 text-slate-950 px-4 py-1 rounded-full placeholder-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                />
                <button
@@ -102,9 +110,14 @@ const Navbar = () => {
             <Link to="/" className="text-white text-lg py-2" onClick={toggleMenu}>
                Home
             </Link>
-            <Link to="/movies" className="text-white text-lg py-2" onClick={toggleMenu}>
+
+            {username && window.location.pathname !=="/"? (<Link to="/" className="text-white text-lg py-2" onClick={toggleMenu}>Movies</Link>):
+            (<a href="#movie-section" onClick={(e) => {
+               e.preventDefault(); // Prevent default anchor behavior
+               scrollToMovieSection();
+            }} className="text-white text-lg py-2">
                Movies
-            </Link>
+            </a>)}
          </div>
 
          {/* User Menu */}
@@ -160,7 +173,7 @@ const Navbar = () => {
                   <Link to="/" className="text-white text-2xl py-2" onClick={toggleMenu}>
                      Home
                   </Link>
-                  <Link to="/movies" className="text-white text-2xl py-2" onClick={toggleMenu}>
+                  <Link to="/" className="text-white text-2xl py-2" onClick={toggleMenu}>
                      Movies
                   </Link>
                   {username ? (

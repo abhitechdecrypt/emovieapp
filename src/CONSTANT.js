@@ -11,10 +11,10 @@ export const ADMIN_CONSTANT = [
       href: "/add-cinema",
       text: "Add Cinema",
    },
-   {
-      href: "/delete-movies",
-      text: "Delete Movies",
-   },
+   // {
+   //    href: "/delete-movies",
+   //    text: "Delete Movies",
+   // },
    {
       href: "block-cinema",
       text: "Block/Unblock Movies",
@@ -23,7 +23,7 @@ export const ADMIN_CONSTANT = [
 
 export const USER_CONSTANT = [
    {
-      href: "/book-movies",
+      href: "/",
       text: "Book Movies",
    },
    {
@@ -31,7 +31,7 @@ export const USER_CONSTANT = [
       text: "Booking History",
    },
    {
-      href: "/cancel-booking",
+      href: "/booking-history",
       text: "Cancel Booking",
    },
 ];

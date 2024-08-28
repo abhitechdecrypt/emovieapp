@@ -5,6 +5,7 @@ import axios from "axios";
 import axiosInstance from "../services/AxiosInstance";
 import { addMovies, getCinemaList } from "../services/service";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // Validation Schema
 const validationSchema = Yup.object({
@@ -24,6 +25,7 @@ const AddMovies = () => {
    const [error, setError] = useState(null);
    const [loading, setLoading] = useState(false);
    const [dropdownOpen, setDropdownOpen] = useState(false);
+   const navigate = useNavigate();
 
    // Fetch cinema data from backend
    useEffect(() => {
@@ -60,11 +62,15 @@ const AddMovies = () => {
             // Transform cinemas array to the desired format
             const formattedValues = {
                ...values,
-               cinemas: values.cinemas.map((id) => ({ id })), // Transform IDs to the format { id: ... }
+               cinemas: values.cinemas.map((id) => ({ id })), 
             };
 
             await addMovies(formattedValues);
-            toast.success("Movies added successfully");
+            toast.success("Movies added successfully", {
+               onClose: () => {
+                   navigate("/");
+               },
+           });
          } catch (error) {
             toast.success("Failed to add movie");
          }

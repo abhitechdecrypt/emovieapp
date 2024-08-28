@@ -1,11 +1,9 @@
 import React from 'react';
-import { Navigate, Route, useLocation } from 'react-router-dom';
-import { useAuth } from './Login/AuthProvider'; // Adjust path as needed
+import { Navigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import {jwtDecode} from 'jwt-decode';
 
 const PrivateRoute = ({ element: Element, requiredRole, ...rest }) => {
-    const { user } = useAuth();
     const location = useLocation();
 
     const token = Cookies.get('token');
