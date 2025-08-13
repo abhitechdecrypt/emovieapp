@@ -1,8 +1,21 @@
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import AppRoutes from "./AppRoutes";
 import { AuthProvider } from "./Login/AuthProvider";
+import { use, useEffect } from "react";
 
 function App() {
+   useEffect(() => {
+      toast.info("Welcome to the application! Please log in to continue.", {
+         position: "top-center",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "colored",
+      });
+   },[])
    
    return (
       <AuthProvider>
@@ -22,8 +35,6 @@ function App() {
          <div className="App">
             <header className="App-header">
                <AppRoutes />
-               <h1>Welcome to the Application</h1>
-               <p>This is a simple React application with authentication.</p>
             </header>
          </div>
       </AuthProvider>
