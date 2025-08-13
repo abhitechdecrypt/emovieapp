@@ -3,6 +3,7 @@ import AppRoutes from "./AppRoutes";
 import { AuthProvider } from "./Login/AuthProvider";
 
 function App() {
+   
    return (
       <AuthProvider>
          <ToastContainer
@@ -21,6 +22,8 @@ function App() {
          <div className="App">
             <header className="App-header">
                <AppRoutes />
+               <h1>Welcome to the Application</h1>
+               <p>This is a simple React application with authentication.</p>
             </header>
          </div>
       </AuthProvider>
