@@ -80,7 +80,7 @@ const Navbar = () => {
       }
    };
    return (
-      <nav className="bg-gray-800 p-3 flex items-center justify-between">
+      <nav className="bg-gray-800 p-3 flex items-center justify-between sticky top-0 z-50">
          {/* Logo and Desktop Links */}
          <div className="flex items-center space-x-4">
             <Link to="/" className="text-white text-2xl font-bold">
